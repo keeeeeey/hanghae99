@@ -5,8 +5,8 @@ import requests
 from bs4 import BeautifulSoup
 
 from pymongo import MongoClient
-client = MongoClient('localhost', 27017)
-db = client.dbsparta
+client = MongoClient('mongodb://test:test@localhost', 27017)
+db = client.dbhomework
 
 ## HTML을 주는 부분
 @app.route('/')
@@ -46,6 +46,12 @@ def saving():
     db.articles.insert_one(doc)
 
     return jsonify({'msg':'저장이 완료되었습니다!'})
+
+@app.route('/delete', methods=['POST'])
+def delete_article():
+    comment_receive = request.form['comment_give']
+    db.articles.delete_one({'comment': comment_receive})
+    return jsonify({'msg': '삭제되었습니다!!'})
 
 if __name__ == '__main__':
    app.run('0.0.0.0',port=8000,debug=True)
